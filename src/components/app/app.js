@@ -21,6 +21,7 @@ export default class App extends Component {
     const {x, y} = this.state;
     return (
         <Fragment>
+          <h1>Игра "Жизнь"</h1>
           <Header x={x} y={y} changeXY={this.changeXY}/>
           <Field x={x} y={y} />
         </Fragment>

@@ -1,4 +1,5 @@
 import React, {Component} from 'react';
+import './header.css';
 
 export default class Header extends Component {
 
@@ -33,17 +34,18 @@ export default class Header extends Component {
   render() {
     const {x, y} = this.state;
     return (
-        <div className="header">
-          <p className="x">Введите x:</p>
-          <input type="text" onChange={this.onChangeX}/>
-          <p className="y">Введите y:</p>
-          <input type="text" onChange={this.onChangeY}/><br/>
-          <button className="start" onClick={(event) => {
+        <header className="header">
+          <p>Для начала игры необходимо ввести Ширину и Высоту игрового поля</p>
+          <span className="x">Ширина: <input type="text" onChange={this.onChangeX} size="3"/>
+          </span>
+          <span className="y">Высота: <input type="text" onChange={this.onChangeY} size="3"/></span>
+
+          <button className="start-game" onClick={(event) => {
             this.props.changeXY(x,y, event.currentTarget);
+            document.querySelector('.field').style.display = 'block';
           }
           }>Start Game</button>
-          <p>X:{x}, Y:{y}</p>
-        </div>
+        </header>
     )
   }
 }
