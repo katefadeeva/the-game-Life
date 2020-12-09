@@ -63,6 +63,7 @@ export default class Field extends Component {
       for (let k = 0; k < x; k++) {
         if (mas[i][k] === 1) {
           countLife++;
+          ctx.fillStyle = 'rgb(85, 67, 168)';
           ctx.fillRect(k*10, i*10, 10,10);
         } else {
           countLife--;
@@ -100,9 +101,13 @@ export default class Field extends Component {
 
   gameOver = () => {
     if (masPrev.join() === mas.join() || countLife === 0) {
-      clearTimeout(timer);
+      this.pauseTimeout();
       alert('Game over');
     }
+  }
+
+  pauseTimeout = () => {
+    clearTimeout(timer);
   }
 
   countNeighbors = (i, k, value) => {
@@ -134,10 +139,16 @@ export default class Field extends Component {
     const {x, y} = this.state;
     return (
         <div className="field">
-          <button id="start"
-                  onClick={this.startLife}
-                  >Start
-          </button>
+          <div className="button-field">
+            <button id="start"
+                    onClick={this.startLife}
+            >Start
+            </button>
+            <button id="pause"
+                    onClick={this.pauseTimeout}
+            >Pause
+            </button>
+          </div>
           <canvas id="canvas"
                   width={`${x*10}px`}
                   height={`${y*10}px`}

@@ -9,12 +9,14 @@ export default class App extends Component {
     y: 0
   }
 
-  changeXY = (x, y, target) => {
+  changeXY = (x, y) => {
     this.setState({
       x: x,
       y: y
     })
-    target.remove();
+    const canvas = document.getElementById('canvas');
+    const ctx = canvas.getContext('2d');
+    ctx.clearRect(0, 0, x*10, y*10);
   }
 
   render() {

@@ -1,8 +1,16 @@
 .field {
   display: none;
+  margin: 20px 0;
 }
 
 #canvas {
   border: 3px solid black;
-  margin: 40px;
+}
+
+.button-field {
+  margin-bottom: 20px;
+}
+
+#start {
+  margin-right: 25px;
 }

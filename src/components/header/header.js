@@ -36,12 +36,12 @@ export default class Header extends Component {
     return (
         <header className="header">
           <p>Для начала игры необходимо ввести Ширину и Высоту игрового поля</p>
-          <span className="x">Ширина: <input type="text" onChange={this.onChangeX} size="3"/>
+          <span className="x">Ширина: <input type="text" onChange={this.onChangeX} size="4" maxLength="4"/>
           </span>
-          <span className="y">Высота: <input type="text" onChange={this.onChangeY} size="3"/></span>
+          <span className="y">Высота: <input type="text" onChange={this.onChangeY} size="4" maxLength="4"/></span>
 
-          <button className="start-game" onClick={(event) => {
-            this.props.changeXY(x,y, event.currentTarget);
+          <button className="start-game" onClick={() => {
+            this.props.changeXY(x,y);
             document.querySelector('.field').style.display = 'block';
           }
           }>Start Game</button>
