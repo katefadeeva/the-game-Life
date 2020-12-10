@@ -30,6 +30,7 @@ export default class Field extends Component {
         x: x,
         y: y
       })
+      // this.props.changeArr(mas);
     }
     this.goLife(x,y);
   }
@@ -50,7 +51,10 @@ export default class Field extends Component {
     x = Math.floor(x/10);
     y = Math.floor(y/10);
     mas[y][x] = 1;
+    // console.log(mas);
     this.drawField(event.currentTarget);
+
+    // this.props.changeArr(mas);
   }
 
   drawField = () => { //рисуется точка на поле
@@ -83,11 +87,10 @@ export default class Field extends Component {
         if (mas[i][k] === 1) {
           neighbors = countNeighbors(i, k, 1);
           (neighbors === 2 || neighbors === 3) ? mas3[i][k] = 1 : mas3[i][k] = 0;
-
         }
         if (mas[i][k] === 0) {
           neighbors = countNeighbors(i, k, 0);
-          if (neighbors === 3) mas3[i][k] = 1;
+          (neighbors === 3) ? mas3[i][k] = 1 : mas3[i][k] = 0;
         }
       }
     }
@@ -95,6 +98,8 @@ export default class Field extends Component {
     mas = mas3;
     drawField();
     count++;
+    // console.log(mas);
+    // this.props.changeArr(mas);
     timer = setTimeout(startLife, 300);
     gameOver();
   }

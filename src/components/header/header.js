@@ -1,4 +1,5 @@
 import React, {Component} from 'react';
+import Save from "../save";
 import './header.css';
 
 export default class Header extends Component {
@@ -39,12 +40,12 @@ export default class Header extends Component {
           <span className="x">Ширина: <input type="text" onChange={this.onChangeX} size="4" maxLength="4"/>
           </span>
           <span className="y">Высота: <input type="text" onChange={this.onChangeY} size="4" maxLength="4"/></span>
-
           <button className="start-game" onClick={() => {
             this.props.changeXY(x,y);
             document.querySelector('.field').style.display = 'block';
           }
           }>Start Game</button>
+          <Save changeSaveState={this.props.changeSaveState}/>
         </header>
     )
   }
