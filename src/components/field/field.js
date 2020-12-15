@@ -3,8 +3,8 @@ import React, {Component } from 'react';
 import './field.css';
 import Save from "../save";
 
-let mas = [];
-let masPrev = [];
+let field = [];
+let fieldPrev = [];
 let countLife = 0;
 let timer;
 
@@ -12,40 +12,30 @@ export default class Field extends Component {
   state = {
     x: 0,
     y: 0,
-    count: 0,
-    mas2: []
+    generationCount: 0
   }
 
   componentDidMount() {
     const {x, y} = this.props;
-    this.setState({
-      width: x,
-      height: y
-    })
+    this.setState({x, y})
     this.goLife(x,y);
   }
 
   componentDidUpdate(prevProps,prevState) {
     const {x, y} = this.props;
-    const { count, mas2 } = this.state;
+    const { generationCount } = this.state;
     if (x !== prevProps.x || y !== prevProps.y) {
       this.setState({x, y})
       this.goLife(x,y);
     }
-    if (count !== prevState.count) this.setState({count});
-    if (mas2.join() !== prevState.mas2.join()) {
-      this.setState((state) => {
-        const newArr = [...mas2];
-        return { mas2: newArr }
-      })
-    }
+    if (generationCount !== prevState.generationCount) this.setState({generationCount});
   }
 
   goLife = (n,m) => { //создает поле необходимого размера
     for (let i = 0; i < m; i++) {
-      mas[i] = [];
+      field[i] = [];
       for (let k = 0; k < n; k++) {
-        mas[i][k] = 0
+        field[i][k] = 0
       }
     }
   }
@@ -56,12 +46,9 @@ export default class Field extends Component {
     let y = newEvent.offsetY;
     x = Math.floor(x/10);
     y = Math.floor(y/10);
-    mas[y][x] = 1;
+    field[y][x] = 1;
     this.drawField(event.currentTarget);
-    this.setState((state) => {
-      let newArr = [...mas];
-      return {mas2: newArr}
-    })
+    this.props.changeHistoryFields(field);
   }
 
   drawField = () => { //рисуется точка на поле
@@ -72,7 +59,7 @@ export default class Field extends Component {
     countLife = 0;
     for (let i = 0; i < y; i++) {
       for (let k = 0; k < x; k++) {
-        if (mas[i][k] === 1) {
+        if (field[i][k] === 1) {
           countLife++;
           ctx.fillStyle = 'rgb(85, 67, 168)';
           ctx.fillRect(k*10, i*10, 10,10);
@@ -86,40 +73,35 @@ export default class Field extends Component {
   startLife = () => {
     const { x, y } = this.state;
     const { countNeighbors, drawField, gameOver, startLife } = this;
-    let mas3 = [];
+    let nextField = [];
     for (let i = 0; i < y; i++) {
-      mas3[i] = [];
+      nextField[i] = [];
       for (let k = 0; k < x; k++) {
         let neighbors;
-        if (mas[i][k] === 1) {
+        if (field[i][k] === 1) {
           neighbors = countNeighbors(i, k, 1);
-          (neighbors === 2 || neighbors === 3) ? mas3[i][k] = 1 : mas3[i][k] = 0;
+          (neighbors === 2 || neighbors === 3) ? nextField[i][k] = 1 : nextField[i][k] = 0;
         }
-        if (mas[i][k] === 0) {
+        if (field[i][k] === 0) {
           neighbors = countNeighbors(i, k, 0);
-          (neighbors === 3) ? mas3[i][k] = 1 : mas3[i][k] = 0;
+          (neighbors === 3) ? nextField[i][k] = 1 : nextField[i][k] = 0;
         }
       }
     }
-    masPrev = [...mas];
-    mas = [...mas3];
+    fieldPrev = [...field];
+    field = [...nextField];
     drawField();
-    this.setState((state) => {
-      const mas2 = [...mas];
-      return {
-        count: state.count + 1,
-        mas2
-      }
-    })
+    this.props.changeHistoryFields(field);
+    this.setState((state) => {return{generationCount: state.generationCount +1}});
     timer = setTimeout(startLife, 500);
     gameOver();
   }
 
   gameOver = () => {
-    if (masPrev.join() === mas.join() || countLife === 0) {
+    if (fieldPrev.join() === field.join() || countLife === 0) {
       this.pauseTimeout();
       alert('Game over');
-      this.setState({count: 0});
+      this.setState({generationCount: 0});
     }
   }
 
@@ -131,14 +113,14 @@ export default class Field extends Component {
     const { x, y } = this.state;
     const { fpm, fpp } = this;
     let neighbors = 0;
-    if (mas[fpm(i, y)-1][k] === 1 && mas[i][k] === value) neighbors++; //проверка верхнего соседа (по оси y)
-    if (mas[i][fpp(k, x)+1] === 1 && mas[i][k] === value) neighbors++; // проверка по правой границе (по оси x)
-    if (mas[fpp(i, y)+1][k] === 1 && mas[i][k] === value) neighbors++; //проверка нижнего соседа
-    if (mas[i][fpm(k, x)-1] === 1 && mas[i][k] === value) neighbors++; // проверка слева (по оси x)
-    if (mas[fpm(i, y)-1][fpp(k, x)+1] === 1 && mas[i][k] === value) neighbors++; // по диагонали правый верхний угол
-    if (mas[fpp(i, y)+1][fpp(k, x)+1] === 1 && mas[i][k] === value) neighbors++; // по диагонали правый нижний угол
-    if (mas[fpp(i, y)+1][fpm(k, x)-1] === 1 && mas[i][k] === value) neighbors++; // по диагонали левый нижний угол
-    if (mas[fpm(i, y)-1][fpm(k, x)-1] === 1 && mas[i][k] === value) neighbors++; // по диагонали левый верхний угол
+    if (field[fpm(i, y)-1][k] === 1 && field[i][k] === value) neighbors++; //проверка верхнего соседа (по оси y)
+    if (field[i][fpp(k, x)+1] === 1 && field[i][k] === value) neighbors++; // проверка по правой границе (по оси x)
+    if (field[fpp(i, y)+1][k] === 1 && field[i][k] === value) neighbors++; //проверка нижнего соседа
+    if (field[i][fpm(k, x)-1] === 1 && field[i][k] === value) neighbors++; // проверка слева (по оси x)
+    if (field[fpm(i, y)-1][fpp(k, x)+1] === 1 && field[i][k] === value) neighbors++; // по диагонали правый верхний угол
+    if (field[fpp(i, y)+1][fpp(k, x)+1] === 1 && field[i][k] === value) neighbors++; // по диагонали правый нижний угол
+    if (field[fpp(i, y)+1][fpm(k, x)-1] === 1 && field[i][k] === value) neighbors++; // по диагонали левый нижний угол
+    if (field[fpm(i, y)-1][fpm(k, x)-1] === 1 && field[i][k] === value) neighbors++; // по диагонали левый верхний угол
     return neighbors;
   }
 
@@ -153,7 +135,7 @@ export default class Field extends Component {
   }
 
   render() {
-    const {x, y, count, mas2} = this.state;
+    const {x, y, generationCount} = this.state;
     return (
         <div className="field">
           <div className="button-field">
@@ -165,9 +147,9 @@ export default class Field extends Component {
                     onClick={this.pauseTimeout}
             >Pause
             </button>
-            <Save changeSaveState={this.props.changeSaveState} mas={mas2}/>
+            <Save changeName={this.props.changeName}/>
           </div>
-          <p>Поколение: {count}</p>
+          <p>Поколение: {generationCount}</p>
           <canvas id="canvas"
                   width={`${x*10}px`}
                   height={`${y*10}px`}

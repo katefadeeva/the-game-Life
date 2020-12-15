@@ -42,6 +42,7 @@ export default class Header extends Component {
           <button className="start-game" onClick={() => {
             this.props.changeXY(x,y);
             document.querySelector('.field').style.display = 'block';
+            document.querySelector('.history').style.display = 'block';
           }
           }>Start Game</button>
         </header>

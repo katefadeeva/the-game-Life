@@ -1,42 +1,47 @@
 import React, {Component } from 'react';
-import isEquals from "../../utils/utils";
+import Table from "../table";
+
+import "./history.css";
+
+function NewHistoryState(id, x, y, name, arr) {
+  this.id = id;
+  this.x = x;
+  this.y = y;
+  this.name = name;
+  this.arr = [...arr];
+  return;
+}
 
 export default class History extends Component {
 
   state = {
-    arrHistory: [],
-    obj: {
-      name: null,
-      arr: [],
-      x: 0,
-      y: 0
-    }
+    id: 0,
+    history: [],
   }
 
   componentDidUpdate(prevProps) {
-    const { obj } = this.props;
-    if (!isEquals(obj, prevProps.obj)) {
-      let newObj = {};
-      Object.assign(newObj, obj);
+    const {x, y, name, historyField} = this.props;
+    if (name !== prevProps.name) {
       this.setState((state) => {
-        console.log(newObj.arr);
-        console.log(state.arrHistory);
-        const arrHistory = [...state.arrHistory, newObj];
+        const currentField = new Array(historyField);
+        const newObj = new NewHistoryState(state.id, x, y, name, currentField);
+        const history = [...state.history, newObj];
         return {
-          obj: newObj,
-          arrHistory
+          history,
+          name,
+          id: state.id + 1
         }
-      })
+      });
     }
   }
 
   render() {
-    const {obj, arrHistory } = this.state;
-    // console.log(obj);
-    console.log(arrHistory);
+    const { history } = this.state;
+
     return (
-        <div>
-          <p>{(obj) ? obj.name : null}</p>
+        <div className="history">
+          <h2>История игры</h2>
+          <Table history={history} />
         </div>
     )
   }

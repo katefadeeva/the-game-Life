@@ -2,28 +2,14 @@ import React, {Component, Fragment} from 'react';
 import Header from "../header";
 import Field from "../field";
 import History from "../history";
-import isEquals from "../../utils/utils";
 
 export default class App extends Component {
 
   state = {
     x: 0,
     y: 0,
-    saveState: {
-      name: null,
-      arr: [],
-      x: 0,
-      y: 0
-    }
-  }
-
-  componentDidUpdate(prevProps, prevState) {
-    const { saveState } = this.state;
-    if (!isEquals(saveState, prevState.saveState)) {
-      let newObj = {};
-      Object.assign(newObj, saveState);
-      this.setState({newObj})
-    }
+    name: null,
+    historyField: []
   }
 
   changeXY = (x, y) => {
@@ -33,26 +19,25 @@ export default class App extends Component {
     ctx.clearRect(0, 0, x*10, y*10);
   }
 
-  changeSaveState = (obj) => {
-    console.log(obj.arr);
-    const { x, y } = this.state;
-    let newObj = {};
-    Object.assign(newObj, obj);
-    newObj.x = x;
-    newObj.y = y;
-    this.setState({
-      saveState: newObj
+  changeName = (name) => {
+    this.setState((state) => {return{name}});
+  }
+
+  changeHistoryFields = (arr) => {
+    this.setState((state) => {
+      const historyField = [...arr];
+      return {historyField};
     })
   }
 
   render() {
-    const {x, y, saveState} = this.state;
+    const {x, y, name, historyField} = this.state;
     return (
         <Fragment>
           <h1>Игра "Жизнь"</h1>
           <Header x={x} y={y} changeXY={this.changeXY}/>
-          <Field x={x} y={y} changeSaveState={this.changeSaveState}/>
-          <History obj={saveState} />
+          <Field x={x} y={y} changeName={this.changeName} changeHistoryFields={this.changeHistoryFields}/>
+          <History x={x} y={y} name={name} historyField={historyField}/>
         </Fragment>
     )
   }

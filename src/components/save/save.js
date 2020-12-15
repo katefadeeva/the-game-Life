@@ -1,44 +1,21 @@
 import React, {Component, Fragment} from 'react';
 
-function NewState(name, arr) {
-  this.name = name;
-  this.arr = [...arr];
-  return;
-}
-
 export default class Save extends Component {
 
   state = {
-    name: null,
-    arr: []
-  }
-
-  componentDidMount() {
-    const { mas } = this.props;
-    this.setState((state) => {
-      const arr = [...mas]
-      return {arr}
-    })
+    name: null
   }
 
   componentDidUpdate(prevProps, prevState) {
     const { name } = this.state;
     if (name !== prevState.name) {
-      this.setState({
-        name
-      })
-    }
-    const { mas } = this.props;
-    if (mas.join() !== prevProps.mas.join()) {
-      this.setState((state) => {
-        const arr = [...mas];
-        return {arr};
-      })
+      this.setState({name});
     }
   }
 
-  addInput = () => {
-
+  addInput = (event) => {
+    event.target.style.display = 'none';
+    document.querySelector('.name').style.display = 'inline-block';
   }
 
   onChangeName = (event) => {
@@ -48,19 +25,20 @@ export default class Save extends Component {
     });
   }
 
-  save = () => {
-    const { name, arr } = this.state;
-    const { changeSaveState } = this.props;
-    const obj = new NewState(name, arr);
-    changeSaveState(obj);
-  }
-
   render() {
+    const { name } = this.state;
     return (
         <Fragment>
-          <button className="save" onClick={this.addInput}>Save State</button>
-          <span className="name">Введите имя: <input type="text" size="8" onChange={this.onChangeName}/></span>
-          <button className="ok" onClick={this.save}>OK</button>
+          <button className="save" onClick={(event) => {this.addInput(event)}}>Save State</button>
+          <span className="name">Введите имя:
+            <input id="text" type="text" size="8" onChange={this.onChangeName}/>
+            <button className="ok" onClick={() => {
+              this.props.changeName(name);
+              document.getElementById('text').value = "";
+              document.querySelector('.name').style.display = 'none';
+              document.querySelector('.save').style.display = 'inline-block';
+            }}>OK</button>
+          </span>
         </Fragment>
     )
   }
