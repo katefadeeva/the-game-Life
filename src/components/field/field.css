@@ -11,6 +11,10 @@
   margin-bottom: 20px;
 }
 
-#start {
+.button-field button {
   margin-right: 25px;
+}
+
+.button-field button:last-child {
+  margin-right: 0;
 }

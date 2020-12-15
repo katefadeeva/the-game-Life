@@ -1,5 +1,4 @@
 import React, {Component} from 'react';
-import Save from "../save";
 import './header.css';
 
 export default class Header extends Component {
@@ -12,8 +11,8 @@ export default class Header extends Component {
   componentDidMount() {
     const { x, y } = this.props;
     this.setState({
-      x: x,
-      y: y
+      x,
+      y
     })
   }
 
@@ -45,7 +44,6 @@ export default class Header extends Component {
             document.querySelector('.field').style.display = 'block';
           }
           }>Start Game</button>
-          <Save changeSaveState={this.props.changeSaveState}/>
         </header>
     )
   }

@@ -1,10 +1,10 @@
 import React, {Component } from 'react';
 
 import './field.css';
+import Save from "../save";
 
 let mas = [];
 let masPrev = [];
-let count = 0;
 let countLife = 0;
 let timer;
 
@@ -12,6 +12,8 @@ export default class Field extends Component {
   state = {
     x: 0,
     y: 0,
+    count: 0,
+    mas2: []
   }
 
   componentDidMount() {
@@ -23,16 +25,20 @@ export default class Field extends Component {
     this.goLife(x,y);
   }
 
-  componentDidUpdate(prevProps) {
+  componentDidUpdate(prevProps,prevState) {
     const {x, y} = this.props;
+    const { count, mas2 } = this.state;
     if (x !== prevProps.x || y !== prevProps.y) {
-      this.setState({
-        x: x,
-        y: y
-      })
-      // this.props.changeArr(mas);
+      this.setState({x, y})
+      this.goLife(x,y);
     }
-    this.goLife(x,y);
+    if (count !== prevState.count) this.setState({count});
+    if (mas2.join() !== prevState.mas2.join()) {
+      this.setState((state) => {
+        const newArr = [...mas2];
+        return { mas2: newArr }
+      })
+    }
   }
 
   goLife = (n,m) => { //создает поле необходимого размера
@@ -51,10 +57,11 @@ export default class Field extends Component {
     x = Math.floor(x/10);
     y = Math.floor(y/10);
     mas[y][x] = 1;
-    // console.log(mas);
     this.drawField(event.currentTarget);
-
-    // this.props.changeArr(mas);
+    this.setState((state) => {
+      let newArr = [...mas];
+      return {mas2: newArr}
+    })
   }
 
   drawField = () => { //рисуется точка на поле
@@ -94,13 +101,17 @@ export default class Field extends Component {
         }
       }
     }
-    masPrev = mas;
-    mas = mas3;
+    masPrev = [...mas];
+    mas = [...mas3];
     drawField();
-    count++;
-    // console.log(mas);
-    // this.props.changeArr(mas);
-    timer = setTimeout(startLife, 300);
+    this.setState((state) => {
+      const mas2 = [...mas];
+      return {
+        count: state.count + 1,
+        mas2
+      }
+    })
+    timer = setTimeout(startLife, 500);
     gameOver();
   }
 
@@ -108,6 +119,7 @@ export default class Field extends Component {
     if (masPrev.join() === mas.join() || countLife === 0) {
       this.pauseTimeout();
       alert('Game over');
+      this.setState({count: 0});
     }
   }
 
@@ -141,7 +153,7 @@ export default class Field extends Component {
   }
 
   render() {
-    const {x, y} = this.state;
+    const {x, y, count, mas2} = this.state;
     return (
         <div className="field">
           <div className="button-field">
@@ -153,7 +165,9 @@ export default class Field extends Component {
                     onClick={this.pauseTimeout}
             >Pause
             </button>
+            <Save changeSaveState={this.props.changeSaveState} mas={mas2}/>
           </div>
+          <p>Поколение: {count}</p>
           <canvas id="canvas"
                   width={`${x*10}px`}
                   height={`${y*10}px`}
