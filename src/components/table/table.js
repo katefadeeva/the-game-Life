@@ -10,7 +10,7 @@ export default class Table extends Component {
   componentDidUpdate(prevProps) {
     const { history } = this.props;
     if (JSON.stringify(history) !== JSON.stringify(prevProps.history)) {
-      this.setState((state) => {
+      this.setState(() => {
         const newHistory = [...history];
         return {history: newHistory}
       });
@@ -26,7 +26,7 @@ export default class Table extends Component {
               <th>Name</th>
               <th>Width</th>
               <th>Height</th>
-              <th></th>
+              {/*<th></th>*/}
             </tr>
           </thead>
           <tbody>
@@ -35,7 +35,7 @@ export default class Table extends Component {
               <td>{item.name}</td>
               <td>{item.x}</td>
               <td>{item.y}</td>
-              <td><button>Load</button></td>
+              {/*<td><button>Load</button></td>*/}
             </tr>)
           })}
           </tbody>
