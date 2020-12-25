@@ -17,18 +17,22 @@ export default class Field extends Component {
 
   componentDidMount() {
     const {x, y} = this.props;
-    this.setState({x, y})
+    this.setState(() => {return {x, y}});
     this.goLife(x,y);
   }
 
   componentDidUpdate(prevProps,prevState) {
-    const {x, y} = this.props;
+    const {x, y, loadField} = this.props;
     const { generationCount } = this.state;
     if (x !== prevProps.x || y !== prevProps.y) {
-      this.setState({x, y})
+      this.setState(() => {return {x, y}})
       this.goLife(x,y);
     }
-    if (generationCount !== prevState.generationCount) this.setState({generationCount});
+    if (generationCount !== prevState.generationCount) this.setState(() => {return {generationCount}});
+    if (loadField.join() !== prevProps.loadField.join()) {
+      field = JSON.parse(JSON.stringify(loadField));
+      this.drawField();
+    }
   }
 
   goLife = (n,m) => { //создает поле необходимого размера
@@ -92,7 +96,7 @@ export default class Field extends Component {
     field = [...nextField];
     drawField();
     this.props.changeHistoryFields(field);
-    this.setState((state) => {return{generationCount: state.generationCount +1}});
+    this.setState((state) => {return {generationCount: state.generationCount +1}});
     timer = setTimeout(startLife, 500);
     gameOver();
   }

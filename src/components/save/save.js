@@ -34,6 +34,7 @@ export default class Save extends Component {
             <input id="text" type="text" size="8" onChange={this.onChangeName}/>
             <button className="ok" onClick={() => {
               this.props.changeName(name);
+              document.querySelector('.history').style.display = 'block';
               document.getElementById('text').value = "";
               document.querySelector('.name').style.display = 'none';
               document.querySelector('.save').style.display = 'inline-block';

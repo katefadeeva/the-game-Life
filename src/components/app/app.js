@@ -9,7 +9,8 @@ export default class App extends Component {
     x: 0,
     y: 0,
     name: null,
-    historyField: []
+    historyField: [],
+    loadField: []
   }
 
   changeXY = (x, y) => {
@@ -20,24 +21,32 @@ export default class App extends Component {
   }
 
   changeName = (name) => {
-    this.setState((state) => {return{name}});
+    this.setState(() => {return{name}});
   }
 
   changeHistoryFields = (arr) => {
-    this.setState((state) => {
-      const historyField = [...arr];
+    this.setState(() => {
+      const historyField = JSON.parse(JSON.stringify(arr));
       return {historyField};
     })
   }
 
+  changeStateLoadField = (arr, x, y) => {
+    console.log(arr);
+    // this.setState(() => {
+    //   const loadField = JSON.parse(JSON.stringify(arr));
+    //   return {loadField, x, y}
+    // })
+  }
+
   render() {
-    const {x, y, name, historyField} = this.state;
+    const {x, y, name, historyField, loadField} = this.state;
     return (
         <Fragment>
           <h1>Игра "Жизнь"</h1>
           <Header x={x} y={y} changeXY={this.changeXY}/>
-          <Field x={x} y={y} changeName={this.changeName} changeHistoryFields={this.changeHistoryFields}/>
-          <History x={x} y={y} name={name} historyField={historyField}/>
+          <Field x={x} y={y} changeName={this.changeName} changeHistoryFields={this.changeHistoryFields} loadField={loadField}/>
+          <History x={x} y={y} name={name} historyField={historyField} changeStateLoadField={this.changeStateLoadField}/>
         </Fragment>
     )
   }

@@ -1,3 +1,8 @@
 .history {
     display: none;
 }
+
+.table {
+    margin: 0 auto;
+    width: 450px;
+}
