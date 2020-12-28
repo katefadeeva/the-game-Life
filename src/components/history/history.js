@@ -24,7 +24,7 @@ export default class History extends Component {
       this.setState((state) => {
         const currentField = JSON.parse(JSON.stringify(historyField));
         const newObj = new NewHistoryState(state.id, x, y, name, currentField);
-        const history = [...state.history, newObj];
+        const history = [newObj, ...state.history];
         return {
           history,
           name,
@@ -48,8 +48,8 @@ export default class History extends Component {
               <th></th>
             </tr>
             </thead>
-            <tbody>
-            { history.slice(0).reverse().map(item => {
+            <tbody id="table__body">
+            { history.map(item => {
               return (<tr key={item.id}>
                 <td>{item.name}</td>
                 <td>{item.x}</td>

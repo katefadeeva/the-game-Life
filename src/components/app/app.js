@@ -32,11 +32,14 @@ export default class App extends Component {
   }
 
   changeStateLoadField = (arr, x, y) => {
-    console.log(arr);
-    // this.setState(() => {
-    //   const loadField = JSON.parse(JSON.stringify(arr));
-    //   return {loadField, x, y}
-    // })
+    console.log(arr, x, y);
+    this.setState(() => {
+      const loadField = JSON.parse(JSON.stringify(arr));
+      return {x, y, loadField}
+    })
+    // const canvas = document.getElementById('canvas');
+    // const ctx = canvas.getContext('2d');
+    // ctx.clearRect(0, 0, x*10, y*10);
   }
 
   render() {

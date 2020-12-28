@@ -29,7 +29,7 @@ export default class Field extends Component {
       this.goLife(x,y);
     }
     if (generationCount !== prevState.generationCount) this.setState(() => {return {generationCount}});
-    if (loadField.join() !== prevProps.loadField.join()) {
+    if (loadField !== prevProps.loadField) {
       field = JSON.parse(JSON.stringify(loadField));
       this.drawField();
     }
